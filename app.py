@@ -1,6 +1,18 @@
 from flask import Flask, render_template, redirect, url_for
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
+from models import (
+   User, 
+   UserSkill, 
+   Friend, 
+   Category, 
+   Skill, 
+   Tag, 
+   TopicTag, 
+   Topic, 
+   Forum, 
+   Reply
+) 
 import os
 
 load_dotenv('.env')
