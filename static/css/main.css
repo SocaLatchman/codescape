@@ -1,0 +1,85 @@
+/* Global ****************/
+
+* 
+{
+padding: 0;
+margin: 0;    
+}
+
+
+html
+{
+box-sizing: border-box;
+}
+
+:root
+{
+--dark-theme-bkgd: #181414;
+--dark-theme-primary-color:  #E5E4E2;
+--dark-theme-secondary-color: #D79AF1;
+--dark-theme-font: 400 0.9em "Space Mono", Courier, monospace;
+--dark-theme-sidebar-heading: 700 1.2em "Space Mono", Courier, monospace;
+--dark-theme-main-heading: 400 1.2em "Space Mono", Courier, monospace;    
+}
+
+body
+{
+background: var(--dark-theme-bkgd);
+color: var(--dark-theme-primary-color);    
+}
+
+header span
+{
+font: 400 2em "Jersey 25", sans-serif;
+color: var(--dark-theme-primary-color);
+}
+
+h1
+{
+font: var(--dark-theme-main-heading);
+color: var(--dark-theme-primary-color);    
+}
+
+h2 
+{
+font: var(--dark-theme-main-heading);
+font-size: 1em;
+color: var(--dark-theme-primary-color);    
+}
+
+p
+{
+font: var(--dark-theme-font);
+color: var(--dark-theme-primary-color);    
+}
+
+a
+{
+color: var(--dark-theme-primary-color);    
+text-decoration: none;
+}
+
+a:hover
+{
+color: var(--dark-theme-secondary-color);    
+text-decoration: underline;
+}
+
+
+/* Registration ****************/
+
+/* Sign out ****************/
+
+/* Sidebar ****************/
+
+
+/* Forum ****************/
+
+/* Topic ****************/
+
+/* Profile ****************/
+
+
+
+
+

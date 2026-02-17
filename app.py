@@ -33,7 +33,7 @@ def signin():
 
 @app.route('/forum')
 def forum():
-    pass
+    return render_template('forum.html', title='Forum')
 
 @app.route('/topic/<topic_id>')
 def topic():
@@ -66,3 +66,6 @@ def profile():
 @app.route('/signout')
 def signout():
     pass
+
+if __name__ == '__main__':
+    app.run(debug=True)
