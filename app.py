@@ -3,7 +3,7 @@ from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 import os
 
-loadenv('.env')
+load_dotenv('.env')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
