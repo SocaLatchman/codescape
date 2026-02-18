@@ -1,0 +1,24 @@
+<aside>
+   <h2>Categories</h2> 
+   <div class="sidebar-categories">
+    <menu>
+       {% for category in forum %}
+        <li>
+          <span class="category-circle" style="background-color: {{ category['Category'].category_color }};"></span>
+          <a href="{{ url_for('category', category_name='category[Category].name')}}">{{ category['Category'].name }}</a>
+        </li>
+      {% endfor %}  
+    </menu>
+   </div> 
+    <div class="sidebar-tags">
+      <h2>Tags</h2> 
+      <menu>
+        {% for tag in tags %}
+          <li>
+            <span class="category-circle" style="background-color: {{ tag.tag_color }};"></span>
+            <a href="{{ url_for('tags', tag_name='tag.name') }}">{{ tag.name }}</a>
+          </li>
+        {% endfor %}
+      </menu>
+    </div> 
+</aside>

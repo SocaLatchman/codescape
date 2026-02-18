@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for
+from sqlmodel import create_engine 
 from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 from models import (
@@ -10,7 +11,6 @@ from models import (
    Tag, 
    TopicTag, 
    Topic, 
-   Forum, 
    Reply
 ) 
 import os
@@ -20,7 +20,7 @@ load_dotenv('.env')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
-
+db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], echo=True)
 
 @app.route('/')
 def index():
@@ -45,10 +45,15 @@ def signin():
 
 @app.route('/forum')
 def forum():
-    return render_template('forum.html', title='Forum')
+    return render_template(
+        'forum.html', 
+        title='Forum', 
+        forum = Topic.get_forum(db_engine), 
+        tags = Tag.get_all_tags(db_engine)
+    )
 
 @app.route('/topic/<topic_id>')
-def topic():
+def topic(topic_id):
     pass
 
 @app.route('/forum/topic', methods=['POST'])
@@ -64,7 +69,7 @@ def category():
     pass
 
 @app.route('/tags/<tag_name>')
-def tag():
+def tags(tag_name):
     pass
 
 @app.route('/dev/<user_id>')

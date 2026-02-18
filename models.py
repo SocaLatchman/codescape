@@ -1,8 +1,7 @@
-from sqlmodel import SQLModel, Field, Relationship, Session, create_engine, select
+from sqlmodel import SQLModel, Field, Relationship, Session, select
 from typing import Optional, List
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
-
 
 class User(SQLModel, table=True):
     __tablename__ = 'users'
@@ -11,6 +10,7 @@ class User(SQLModel, table=True):
     email: str
     password: str
     bio: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
     last_active: datetime = Field(default_factory=datetime.utcnow)
     image: str
     status: str = Field(default='visible')
@@ -27,13 +27,12 @@ class Friend(SQLModel, table=True):
     __tablename__ = 'friends'
     friend_id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="users.user_id")
-    friend_user_id: int = Field(foreign_key="users.user_id")
     status: str = Field(default='active')
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     # Relationships
-    user: Optional[User] = Relationship(back_populates="friends", sa_relationship_kwargs={'foreign_keys': '[Friend.user_id]'})
-    friend_user: Optional[User] = Relationship(back_populates="friends_of", sa_relationship_kwargs={'foreign_keys': '[Friend.friend_user_id]'})
+    user: Optional[User] = Relationship(back_populates="friends")
+    friend_user: Optional[User] = Relationship(back_populates="friends_of")
 
 class Skill(SQLModel, table=True):
     __tablename__ = 'skills'
@@ -71,6 +70,10 @@ class Tag(SQLModel, table=True):
     # Relationships
     topic_tags: List["TopicTag"] = Relationship(back_populates="tag")
 
+    def get_all_tags(db_engine):
+        with Session(db_engine) as session:
+            return [tag.model_dump() for tag in session.exec(select(Tag)).all()]
+
 class Topic(SQLModel, table=True):
     __tablename__ = 'topics'
     topic_id: Optional[int] = Field(default=None, primary_key=True)
@@ -80,13 +83,24 @@ class Topic(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     category_id: int = Field(foreign_key="categories.category_id")
     user_id: int = Field(foreign_key="users.user_id")
+    views: int = Field(default=0)
+
+    def get_forum(db_engine):
+        with Session(db_engine) as session: 
+           statement = (
+              select(Topic, User.image, User.handle, Category)
+              .where(Topic.user_id == User.user_id,
+              Topic.category_id == Category.category_id)          
+           )
+           results = session.exec(statement).all()
+           return [topic._mapping for topic in results]
+               
     
     # Relationships
     user: Optional[User] = Relationship(back_populates="topics")
     category: Optional[Category] = Relationship(back_populates="topics")
     topic_tags: List["TopicTag"] = Relationship(back_populates="topic")
     replies: List["Reply"] = Relationship(back_populates="topic")
-    forums: List["Forum"] = Relationship(back_populates="topic")
 
 class TopicTag(SQLModel, table=True):
     __tablename__ = 'topic_tags'
@@ -97,15 +111,6 @@ class TopicTag(SQLModel, table=True):
     # Relationships
     topic: Optional[Topic] = Relationship(back_populates="topic_tags")
     tag: Optional[Tag] = Relationship(back_populates="topic_tags")
-
-class Forum(SQLModel, table=True):
-    __tablename__ = 'forums'
-    forum_id: Optional[int] = Field(default=None, primary_key=True)
-    topic_id: int = Field(foreign_key="topics.topic_id")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    
-    # Relationships
-    topic: Optional[Topic] = Relationship(back_populates="forums")
 
 class Reply(SQLModel, table=True):
     __tablename__ = 'replies'
@@ -119,3 +124,4 @@ class Reply(SQLModel, table=True):
     # Relationships
     topic: Optional[Topic] = Relationship(back_populates="replies")
     user: Optional[User] = Relationship(back_populates="replies")
+

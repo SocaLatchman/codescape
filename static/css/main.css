@@ -59,10 +59,24 @@ color: var(--dark-theme-primary-color);
 text-decoration: none;
 }
 
-a:hover
+h2 a:hover
 {
 color: var(--dark-theme-secondary-color);    
 text-decoration: underline;
+}
+
+.category-circle
+{
+display: inline-block;    
+width: 8px; 
+height: 8px;
+border-radius: 3px;    
+}
+
+img 
+{
+width: 24px;
+height: 24px;    
 }
 
 
