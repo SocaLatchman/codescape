@@ -11,8 +11,8 @@
         <h1>Forum</h1> 
         <div class="forum-filter">
             <select name="categories">
-                {% for category in forum %}
-                <option value="{{ category['Category'].name }}">{{ category['Category'].name }}</option>
+                {% for category in categories %}
+                   <option value="{{ category.name }}">{{ category.name }}</option>
                 {% endfor %}
             </select>
             <select name="filter">
@@ -40,7 +40,7 @@
         </div>
         {% endfor %}
    </div>
-</main>
+  </main>
  </div>
 </div>
 {% endblock %}

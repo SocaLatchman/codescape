@@ -1,11 +1,25 @@
 from sqlmodel import SQLModel, Field, Relationship, Session, select
-from typing import Optional, List
+from typing import Optional, List, ClassVar
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
+from uuid import uuid4, UUID
 
-class User(SQLModel, table=True):
+class BaseModel(SQLModel):
+    _engine: ClassVar = None
+
+    @classmethod
+    def set_engine(cls, db_engine):
+        cls._engine = db_engine
+    
+    @classmethod
+    def get_session(cls):
+        return Session(cls._engine)
+
+
+class User(BaseModel, table=True):
     __tablename__ = 'users'
     user_id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(default_factory=uuid4, unique=True, index=True)
     handle: str
     email: str
     password: str
@@ -23,9 +37,10 @@ class User(SQLModel, table=True):
     user_skills: List["UserSkill"] = Relationship(back_populates="user")
     replies: List["Reply"] = Relationship(back_populates="user")
 
-class Friend(SQLModel, table=True):
+class Friend(BaseModel, table=True):
     __tablename__ = 'friends'
     friend_id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(default_factory=uuid4, unique=True, index=True)
     user_id: int = Field(foreign_key="users.user_id")
     status: str = Field(default='active')
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -34,7 +49,7 @@ class Friend(SQLModel, table=True):
     user: Optional[User] = Relationship(back_populates="friends")
     friend_user: Optional[User] = Relationship(back_populates="friends_of")
 
-class Skill(SQLModel, table=True):
+class Skill(BaseModel, table=True):
     __tablename__ = 'skills'
     skill_id: Optional[int] = Field(default=None, primary_key=True)
     skill: str
@@ -42,7 +57,7 @@ class Skill(SQLModel, table=True):
     # Relationships
     user_skills: List["UserSkill"] = Relationship(back_populates="skill")
 
-class UserSkill(SQLModel, table=True):
+class UserSkill(BaseModel, table=True):
     __tablename__ = 'user_skills'
     user_skills_id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="users.user_id")
@@ -52,31 +67,38 @@ class UserSkill(SQLModel, table=True):
     user: Optional[User] = Relationship(back_populates="user_skills")
     skill: Optional[Skill] = Relationship(back_populates="user_skills")
 
-class Category(SQLModel, table=True):
+class Category(BaseModel, table=True):
     __tablename__ = 'categories'
     category_id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(default_factory=uuid4, unique=True, index=True)
     name: str
     category_color: str
     
     # Relationships
     topics: List["Topic"] = Relationship(back_populates="category")
 
-class Tag(SQLModel, table=True):
+    def get_categories():
+        with Category.get_session() as session:
+            return [category.model_dump() for category in session.exec(select(Category)).all()]
+
+class Tag(BaseModel, table=True):
     __tablename__ = 'tags'
     tag_id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(default_factory=uuid4, unique=True, index=True)
     name: str
     tag_color: str
     
     # Relationships
     topic_tags: List["TopicTag"] = Relationship(back_populates="tag")
 
-    def get_all_tags(db_engine):
-        with Session(db_engine) as session:
+    def get_all_tags():
+        with Tag.get_session() as session:
             return [tag.model_dump() for tag in session.exec(select(Tag)).all()]
 
-class Topic(SQLModel, table=True):
+class Topic(BaseModel, table=True):
     __tablename__ = 'topics'
     topic_id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(default_factory=uuid4, unique=True, index=True)
     title: str
     body: str
     likes: int = Field(default=0)
@@ -85,16 +107,31 @@ class Topic(SQLModel, table=True):
     user_id: int = Field(foreign_key="users.user_id")
     views: int = Field(default=0)
 
-    def get_forum(db_engine):
-        with Session(db_engine) as session: 
+    def get_forum(self):    
+        with self.get_session() as session: 
            statement = (
               select(Topic, User.image, User.handle, Category)
-              .where(Topic.user_id == User.user_id,
-              Topic.category_id == Category.category_id)          
+              .where(Topic.user_id == User.user_id)         
            )
            results = session.exec(statement).all()
            return [topic._mapping for topic in results]
-               
+
+    def get_topic(self, id):
+        with self.get_session() as session:
+            result = session.get(Topic, id)
+            return result.model_dump()
+
+    @classmethod
+    def increase_view_count(cls, id):
+        with cls.get_session() as session:
+            result = session.get(Topic, id)
+            result.views += 1
+            session.add(result)
+            session.commit()
+            session.refresh(result)
+        return result.views
+
+
     
     # Relationships
     user: Optional[User] = Relationship(back_populates="topics")
@@ -112,9 +149,10 @@ class TopicTag(SQLModel, table=True):
     topic: Optional[Topic] = Relationship(back_populates="topic_tags")
     tag: Optional[Tag] = Relationship(back_populates="topic_tags")
 
-class Reply(SQLModel, table=True):
+class Reply(BaseModel, table=True):
     __tablename__ = 'replies'
     reply_id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(default_factory=uuid4, unique=True, index=True)
     body: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     likes: int = Field(default=0)

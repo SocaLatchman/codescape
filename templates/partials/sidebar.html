@@ -3,10 +3,15 @@
    <h2>Categories</h2> 
    <div class="sidebar-categories">
     <menu>
-       {% for category in forum %}
+       {% for category in categories %}
         <li>
-          <span class="category-circle" style="background-color: {{ category['Category'].category_color }};"></span>
-          <a href="{{ url_for('category', category_name=category['Category'].name)}}">{{ category['Category'].name }}</a>
+          <span class="category-circle" style="background-color: {{ category.category_color }};"></span>
+          {% if category.name == 'Game Development' %}
+             {% set category_name = 'game-development' %}
+             <a href="{{ url_for('category', category_name=category_name|lower)}}">{{ category.name }}</a>
+          {% else %}
+            <a href="{{ url_for('category', category_name=category.name|lower)}}">{{ category.name }}</a>
+          {% endif %}
         </li>
       {% endfor %}  
     </menu>
@@ -17,10 +22,23 @@
         {% for tag in tags %}
           <li>
             <span class="category-circle" style="background-color: {{ tag.tag_color }};"></span>
-            <a href="{{ url_for('tags', tag_name=tag.name) }}">{{ tag.name }}</a>
+            <a href="{{ url_for('tags', tag_name=tag.name|lower) }}">{{ tag.name }}</a>
           </li>
         {% endfor %}
       </menu>
     </div> 
  </aside>
 </div>
+{#
+
+    <menu>
+       {% for category in forum %}
+        <li>
+          <span class="category-circle" style="background-color: {{ category['Category'].category_color }};"></span>
+          <a href="{{ url_for('category', category_name=category['Category'].name|lower)}}">{{ category['Category'].name}}</a>
+        </li>
+      {% endfor %}  
+    </menu>
+
+
+#}
