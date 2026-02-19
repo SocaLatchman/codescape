@@ -34,7 +34,7 @@ font: 400 2em "Jersey 25", sans-serif;
 color: var(--dark-theme-primary-color);
 }
 
-h1
+h1    
 {
 font: var(--dark-theme-main-heading);
 color: var(--dark-theme-primary-color);    
@@ -44,7 +44,8 @@ h2
 {
 font: var(--dark-theme-main-heading);
 font-size: 1em;
-color: var(--dark-theme-primary-color);    
+color: var(--dark-theme-primary-color); 
+margin: 25px 0;   
 }
 
 p
@@ -79,6 +80,83 @@ width: 24px;
 height: 24px;    
 }
 
+header
+{
+display: flex;
+flex-direction: row;
+justify-content: space-between;  
+align-items: center; 
+padding: 25px;  
+border-bottom: 1px solid #232629;  
+}
+
+header menu li
+{
+display: inline;
+list-style-type: none;
+padding-right: 25px;
+font: 400 0.8em "Space Mono", courier, monospace;     
+}
+
+.forum-flex 
+{
+display: flex;
+flex-direction: row;
+justify-content: space-around;   
+width: 100%;
+}
+
+.flex-container
+{
+display: flex;
+flex-direction: row;
+justify-content: space-between;   
+align-items: center;
+width: 100%;
+height: 100%;
+}
+
+.flex-container div:first-of-type
+{
+width: 85%;
+height: 100%;
+}
+
+.flex-container div:last-of-type
+{
+width: 15%;
+}
+
+.sidebar
+{
+width: 20%;   
+border-right: 1px solid #232629;  
+padding: 25px;
+}
+
+.main-content
+{
+width: 75%;   
+}
+
+main header 
+{
+justify-content: space-between;
+width: 75%;   
+}
+
+.forum-filter
+{
+margin-right: 25px;    
+}
+
+.signout
+{
+display: inline-block;    
+border: 1px solid var(--dark-theme-primary-color);
+border-radius: 10px; 
+padding: 5px 12px;   
+}
 
 /* Registration ****************/
 
@@ -86,8 +164,77 @@ height: 24px;
 
 /* Sidebar ****************/
 
+.sidebar menu li 
+{
+list-style-type: none;    
+padding-bottom: 10px;
+font: 300 0.8em "Space Mono", courier, monospace;
+}
+
+
 
 /* Forum ****************/
+
+.forum 
+{
+padding-bottom: 50px;
+}
+
+.forum header
+{
+width: 93.5%;
+}
+
+
+.forum .topics div ul li
+{
+display: inline;
+list-style-type: none;
+font: 300 0.8em "Space Mono", courier, monospace;
+}
+
+.topics 
+{  
+border-bottom: 1px solid #232629;
+font: 300 0.8em "Space Mono", courier, monospace;    
+padding: 10px 25px;
+}
+
+.topics:last-of-type 
+{  
+border-bottom: none;
+}
+
+.topics h2 
+{  
+margin-bottom: 5px;    
+}
+
+.topics .flex-container div 
+{
+margin-top: 15px;
+align-items: center;
+}
+
+.topics img
+{
+vertical-align: middle;
+}
+
+.forum-filter select
+{
+border-bottom: 1px solid var(--dark-theme-primary-color);
+background: transparent;
+color: var(--dark-theme-primary-color);
+outline: transparent;
+height: 25px;
+}
+
+
+.forum-filter select[name='categories']
+{
+margin-right: 10px;    
+}
 
 /* Topic ****************/
 

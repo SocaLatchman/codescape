@@ -1,27 +1,30 @@
 {% extends 'base.html' %}
 {% block title %}{{ title }}{% endblock %}
+{% block content %}
 {% include 'partials/header.html' %}
 <div class="forum-flex">
 {% include 'partials/sidebar.html' %}    
-{% block content %}
+<div class="main-content">
 <main>
-  <div id="forum">
+  <div class="forum">
     <header>
-        <h1>Forum</h1>  
-        <select name="categories">
-            {% for category in forum %}
-            <option value="{{ category['Category'].name }}">{{ category['Category'].name }}</option>
-            {% endfor %}
-        </select>
-        <select name="filter">
-        <option value="recent">Most recent</option>
-        <option value="oldest">Oldest</option>
-        </select>   
+        <h1>Forum</h1> 
+        <div class="forum-filter">
+            <select name="categories">
+                {% for category in forum %}
+                <option value="{{ category['Category'].name }}">{{ category['Category'].name }}</option>
+                {% endfor %}
+            </select>
+            <select name="filter">
+            <option value="recent">Most recent</option>
+            <option value="oldest">Oldest</option>
+            </select>   
+        </div> 
     </header>
         {% for topics in forum %}
         <div class="topics">
             <h2><a href="{{ url_for('topic', topic_id=topics['Topic'].topic_id)}}">{{ topics['Topic'].title }}</a></h2>
-            <div><span class="category-circle" style="background-color: {{ topics['Category'].category_color }};"></span>{{ topics['Category'].name }}</div>
+            <div><span class="category-circle" style="background-color: {{ topics['Category'].category_color }};"></span>&nbsp;{{ topics['Category'].name }}</div>
             <div class="flex-container">
             <div>
                 <img src="/static/images/{{ topics.image }}" alt="">
@@ -38,5 +41,6 @@
         {% endfor %}
    </div>
 </main>
+ </div>
 </div>
 {% endblock %}
