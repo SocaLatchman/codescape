@@ -162,6 +162,10 @@ class Topic(BaseModel, table=True):
         return result.views
 
 
+    @classmethod
+    def increase_count(cls, id):
+        pass 
+
 class TopicTag(SQLModel, table=True):
     __tablename__ = 'topic_tags'
     topic_tags_id: Optional[int] = Field(default=None, primary_key=True)

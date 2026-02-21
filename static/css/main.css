@@ -71,7 +71,8 @@ text-decoration: underline;
 display: inline-block;    
 width: 8px; 
 height: 8px;
-border-radius: 3px;    
+border-radius: 3px;
+font: 400 1em "Space Mono", Courier, monospace;     
 }
 
 img 
@@ -95,7 +96,7 @@ header menu li
 display: inline;
 list-style-type: none;
 padding-right: 25px;
-font: 400 0.8em "Space Mono", courier, monospace;     
+font: 400 0.8em "Space Mono", Courier, monospace;     
 }
 
 .forum-flex 
@@ -170,7 +171,7 @@ padding: 5px 12px;
 {
 list-style-type: none;    
 padding-bottom: 10px;
-font: 300 0.8em "Space Mono", courier, monospace;
+font: 300 0.8em "Space Mono", Courier, monospace;
 }
 
 
@@ -191,13 +192,13 @@ width: 97.5%;
 {
 display: inline;
 list-style-type: none;
-font: 300 0.9em "Space Mono", courier, monospace;
+font: 300 0.9em "Space Mono", Courier, monospace;
 }
 
 .topics 
 {  
 border-bottom: 1px solid #232629;
-font: 300 0.9em "Space Mono", courier, monospace;    
+font: 300 0.9em "Space Mono", Courier, monospace;    
 padding: 10px 25px;
 }
 
@@ -213,9 +214,18 @@ margin-bottom: 5px;
 
 .topics .flex-container div 
 {
+width: 65%;      
 margin-top: 15px;
 align-items: center;
 }
+
+.topics .flex-container div:last-of-type 
+{
+width: 45%;    
+margin-top: 15px;
+align-items: center;
+}
+
 
 .topics img
 {
@@ -238,6 +248,121 @@ margin-right: 10px;
 }
 
 /* Topic ****************/
+
+.forum header
+{
+display: block;  
+}
+
+.topic-details h2
+{
+padding: 0;
+margin: 15px 0 5px 0;
+}
+
+.topics p:first-of-type
+{
+width: 100%;
+text-align: right;
+margin: 3px 0;  
+}
+
+.topics .user-details
+{
+width: 85%;    
+text-align: left;    
+margin: 40px 0 20px 0;
+}
+
+.topics .user-details p
+{
+text-align: left; 
+line-height: 2em;
+margin-bottom: 15px;   
+}
+
+.topics ul
+{
+width: 100%;
+text-align: right;
+}
+
+.topics ul li
+{
+display: inline;    
+list-style-type: none;    
+padding-right: 25px;
+}
+
+.replies
+{
+width: 100%;    
+border-bottom: 1px solid #232629;
+padding: 25px;
+}
+
+.date-created
+{
+width: 95%;
+text-align: right !important;
+margin: 10px 0 10px 0;  
+}
+
+.replies .user-details
+{
+width: 85%;    
+text-align: left;    
+margin: 20px 0 10px 0;
+}
+
+.replies p
+{ 
+text-align: left; 
+line-height: 2em;
+margin-bottom: 5px;   
+}
+
+.replies span,
+.topic-details div
+{
+font: 300 0.9em "Space Mono", Courier, monospace;  
+padding-left: 5px;   
+}
+
+.replies ul
+{
+width: 100%;
+text-align: right;
+margin-bottom: 5px;
+}
+
+.replies ul li
+{
+display: inline;    
+list-style-type: none;    
+padding-right: 50px;
+font: 300 0.9em "Space Mono", Courier, monospace;
+}
+
+.user-details img,
+.replies ul li img
+{
+display: inline;    
+vertical-align: middle;
+}
+
+.reply-button
+{
+display: block;    
+margin: 35px 25px 0 auto;    
+width: 150px;
+height: 45px;
+background: #D79AF1;
+border-radius: 10px;
+border: none;
+font: 300 0.9em "Space Mono", Courier, monospace;
+}
+
 
 /* Profile ****************/
 

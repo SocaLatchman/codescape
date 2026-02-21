@@ -19,36 +19,28 @@
         </div> 
     </header>
     <div class="topics">
-        <div><span class="category-circle" style="background-color: {{ category.category_color }};"></span>&nbsp;{{ category.name }}</div>
-        <div class="flex-container">
-        <div>
-            <p>{{ topic['Topic'].created_at.strftime('%d/%m/%Y')  }}</p>
-            <p>
-              {{ topic['Topic'].body }}  
-            </p>
-            <img src="/static/images/{{ topic.image }}" alt="">
-            <span><a href="{{ url_for('user_profile', user_id=topic.public_id|replace('-', '')) }}">{{ topic.handle }}</a></span>
-          </div>  
-          <div>
-            <ul>
-              <li><a href="{{ url_for('like_topic') }}"><img src="/static/images/heart.svg" alt=""></a>{{ topic['Topic'].likes }}</li>
-              <li>{{ topic['Topic'].views }}  Views</li>
-            </ul>
-         </div>
-       </div>
+      <p>{{ topic['Topic'].created_at.strftime('%d/%m/%Y')  }}</p>
+      <div class="user-details">
+          <p>{{ topic['Topic'].body }}</p>
+          <img src="/static/images/{{ topic.image }}" alt="">
+          <span><a href="{{ url_for('user_profile', user_id=topic.public_id|replace('-', '')) }}">{{ topic.handle }}</a></span>
+       </div>  
+       <ul>
+        <li><a href="{{ url_for('like_topic') }}"><img src="/static/images/heart.svg" alt=""></a>&nbsp;{{ topic['Topic'].likes }}</li>
+        <li>{{ topic['Topic'].views }}  Views</li>
+       </ul>
     </div>
     {% for reply in replies %}
         <div class="replies">
-           <p>{{ reply.Reply.created_at.strftime('%d/%m/%Y') }}</p>      
-           <p>{{ reply.Reply.body }}</p>
-           <div class="flex-container">
-            <div>
+           <p class="date-created">{{ reply.Reply.created_at.strftime('%d/%m/%Y') }}</p>      
+            <div class="user-details">
+                <p>{{ reply.Reply.body }}</p>
                 <img src="/static/images/{{ reply.image }}" alt="">
+                <span><a href="{{ url_for('user_profile', user_id=topic.public_id|replace('-', '')) }}">{{ reply.handle }}</a></span>
             </div>  
-            <div>  
-              <span><a href="{{ url_for('like_reply') }}"><img src="/static/images/heart.svg" alt=""></a>{{ reply.Reply.likes }}</span>
-            </div>
-            </div>
+            <ul>  
+              <li><a href="{{ url_for('like_reply') }}"><img src="/static/images/heart.svg" alt=""></a>&nbsp;{{ reply.Reply.likes }}</li>
+            </ul>
         </div>
      {% endfor %}
      <button type="button" class="reply-button">Reply</button>
