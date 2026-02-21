@@ -23,12 +23,12 @@
     </header>
         {% for topics in forum %}
         <div class="topics">
-            <h2><a href="{{ url_for('topic', topic_id=topics['Topic'].topic_id)}}">{{ topics['Topic'].title }}</a></h2>
+            <h2><a href="{{ url_for('topic', topic_id=topics['Topic'].public_id|replace('-', ''))}}">{{ topics['Topic'].title }}</a></h2>
             <div><span class="category-circle" style="background-color: {{ topics['Category'].category_color }};"></span>&nbsp;{{ topics['Category'].name }}</div>
             <div class="flex-container">
             <div>
                 <img src="/static/images/{{ topics.image }}" alt="">
-                <span><a href="{{ url_for('user_profile', user_id=topics['Topic'].user_id) }}">{{ topics.handle }}</a></span>
+                <span><a href="{{ url_for('user_profile', user_id=topics['Topic'].public_id|replace('-', '')) }}">{{ topics.handle }}</a></span>
             </div>  
             <div>
                 <ul>

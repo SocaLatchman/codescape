@@ -80,6 +80,13 @@ class Category(BaseModel, table=True):
     def get_categories():
         with Category.get_session() as session:
             return [category.model_dump() for category in session.exec(select(Category)).all()]
+    
+    @classmethod
+    def get_category(cls, id):
+        with Category.get_session() as session:
+            result = session.get(cls, id)
+            return result
+
 
 class Tag(BaseModel, table=True):
     __tablename__ = 'tags'
@@ -107,37 +114,53 @@ class Topic(BaseModel, table=True):
     user_id: int = Field(foreign_key="users.user_id")
     views: int = Field(default=0)
 
+    # Relationships
+    user: Optional[User] = Relationship(back_populates="topics")
+    category: Optional[Category] = Relationship(back_populates="topics")
+    topic_tags: List["TopicTag"] = Relationship(back_populates="topic")
+    replies: List["Reply"] = Relationship(back_populates="topic")
+
     def get_forum(self):    
         with self.get_session() as session: 
            statement = (
               select(Topic, User.image, User.handle, Category)
-              .where(Topic.user_id == User.user_id)         
+              .where(Topic.user_id == User.user_id) 
+              .where(Topic.category_id == Category.category_id)        
            )
            results = session.exec(statement).all()
-           return [topic._mapping for topic in results]
+           return [forum._mapping for forum in results]
 
     def get_topic(self, id):
+        result = []
         with self.get_session() as session:
-            result = session.get(Topic, id)
-            return result.model_dump()
+            topic = session.exec(
+                select(Topic, User.image, User.handle, User.public_id, Category)
+                .where(Topic.user_id == User.user_id) 
+                .where(Topic.category_id == Category.category_id)
+                .where(Topic.public_id == id)
+            ).all()
+
+            replies = session.exec(
+                select(Reply, User.image, User.handle, User.public_id)
+                .where(Reply.user_id == User.user_id)
+                .where(Reply.topic_id == topic[0].Topic.topic_id)
+            ).all()
+
+            t = [t._mapping for t in topic]
+            r = [reply for reply in replies]
+            result.append({'topic' : t, 'replies' : r})
+        return result
 
     @classmethod
     def increase_view_count(cls, id):
         with cls.get_session() as session:
-            result = session.get(Topic, id)
+            result = session.exec(select(Topic).where(Topic.public_id == id)).one()
             result.views += 1
             session.add(result)
             session.commit()
             session.refresh(result)
         return result.views
 
-
-    
-    # Relationships
-    user: Optional[User] = Relationship(back_populates="topics")
-    category: Optional[Category] = Relationship(back_populates="topics")
-    topic_tags: List["TopicTag"] = Relationship(back_populates="topic")
-    replies: List["Reply"] = Relationship(back_populates="topic")
 
 class TopicTag(SQLModel, table=True):
     __tablename__ = 'topic_tags'
@@ -162,4 +185,13 @@ class Reply(BaseModel, table=True):
     # Relationships
     topic: Optional[Topic] = Relationship(back_populates="replies")
     user: Optional[User] = Relationship(back_populates="replies")
+
+    def get_replies(id):
+        with Reply.get_session() as session:
+            result = session.exec(
+                select(Reply, User.image, User.handle)
+                .where(Reply.topic_id == id)
+            ).all()
+            return [replies._mapping for replies in result]
+
 

@@ -57,15 +57,18 @@ def forum():
         tags = Tag.get_all_tags()
     )
 
-@app.route('/topic/<topic_id>')
+@app.route('/t/<topic_id>')
 def topic(topic_id):
     topic = Topic()
-    topic = topic.get_topic(int(topic_id))
-    Topic.increase_view_count(int(topic_id))
+    topic = topic.get_topic(topic_id)
+    Topic.increase_view_count(topic_id) 
+    print(topic[0]['topic'][0]['Category'].category_id)
     return render_template(
         'topic.html',
         title = 'Topic',
-        topic = topic,
+        topic = topic[0]['topic'][0],
+        replies = topic[0]['replies'],
+        category = Category.get_category(topic[0]['topic'][0]['Category'].category_id),
         categories = Category.get_categories(),
         tags = Tag.get_all_tags()
     )
@@ -74,11 +77,20 @@ def topic(topic_id):
 def add_topic():
     pass
 
-@app.route('/topic/<topic_id>/reply/', methods=['GET', 'POST'])
+@app.route('/t/<topic_id>/reply/', methods=['GET', 'POST'])
 def reply():
     pass
 
-@app.route('/categories/<category_name>')
+@app.route('/t/like')
+def like_topic():
+    #if a user is logged in let them like the post
+    pass
+
+@app.route('/r/like')
+def like_reply():
+    pass
+
+@app.route('/c/<category_name>')
 def category():
     pass
 
